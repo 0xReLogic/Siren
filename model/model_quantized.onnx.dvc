@@ -1,0 +1,5 @@
+outs:
+- md5: 9bd905d0927770cb267deeb5f76b6cce
+  size: 67406167
+  hash: md5
+  path: model_quantized.onnx
