@@ -1,44 +1,95 @@
 # Siren: Real-Time Phishing Detector
 
-Siren is a project to build a real-time phishing detector that runs directly in the browser. It utilizes an optimized machine learning model integrated into a browser extension built with Rust and WebAssembly (WASM) for maximum performance.
+Siren is a high-performance, real-time phishing detector that runs directly in your browser. It leverages a fine-tuned DistilBERT model, compiled to WebAssembly from Rust, to analyze URLs and provide instant threat assessments without sending your data to a server.
+
+---
 
 ## Project Status
 
-**Phase 2: Model Training & Optimization - COMPLETE**
+**Phase 3: Browser Extension Development - IN PROGRESS**
 
-The project has successfully completed the model training and optimization phase. The next step is to begin the development of the browser extension.
+The core inference pipeline has been successfully implemented in Rust and compiled to WebAssembly. The browser extension UI is built and connected to the WASM module. We are currently debugging a silent failure where the WASM module is not loading correctly within the extension's environment.
 
 ## Tech Stack
 
 *   **Machine Learning**:
-    *   Python
-    *   PyTorch & Hugging Face `transformers` for the DistilBERT model.
-    *   Hugging Face `optimum` for robust ONNX exporting.
-*   **Versioning**:
-    *   **Git & GitHub**: For source code.
-    *   **DVC**: For data and model versioning.
-    *   **DagsHub**: As a remote storage backend for DVC (via S3).
-*   **Browser Extension (Phase 3)**:
-    *   Rust
-    *   WebAssembly (WASM)
+    *   Python, PyTorch, Hugging Face `transformers`
+    *   Hugging Face `optimum` for robust ONNX quantization and export.
+*   **Core Engine**:
+    *   **Rust** for performance-critical logic.
+    *   **WebAssembly (WASM)** via `wasm-pack` for browser execution.
+    *   `tract` crate for running ONNX inference in Rust.
+*   **Browser Extension**:
+    *   HTML, CSS, JavaScript
+    *   **Vite** for a modern, fast build process.
+    *   `vite-plugin-wasm` for seamless WASM integration.
+*   **Versioning & CI/CD**:
+    *   **Git & GitHub** for source code.
+    *   **DVC** for data and model versioning.
+    *   **DagsHub** as the remote storage backend for DVC.
+    *   GitHub Actions for continuous integration.
 
-## Current Progress
+## Project Structure
 
--   [x] **Phase 1: Project Initialization & Foundation**
-    -   Project structure created.
-    -   Git repository initialized.
-    -   DVC successfully set up and connected to DagsHub for remote storage.
+```
+.siren/
+├── .dvc/              # DVC metadata
+├── .github/           # CI/CD workflows
+├── docs/              # Project documentation (RFCs)
+├── extension/
+│   ├── app/           # Vite-based frontend (JS, HTML, CSS)
+│   └── siren_engine/  # Rust WASM library for the core logic
+├── model/             # Model training, quantization, and data scripts
+└── ...                # Config files (.gitignore, justfile, etc.)
+```
 
--   [x] **Phase 2: Model Training & Optimization**
-    -   A baseline DistilBERT model was successfully fine-tuned for phishing URL classification.
-    -   The model was successfully quantized (dynamic quantization) to reduce its size and accelerate inference.
-    -   The final model was exported to the **ONNX format (`model_quantized.onnx`)**, making it ready for use in non-Python environments.
-    -   All model files (both PyTorch and ONNX) are now tracked with DVC.
+## How to Build and Run
+
+Follow these steps to build and test the extension locally.
+
+### Prerequisites
+
+*   [Rust and Cargo](https://www.rust-lang.org/tools/install)
+*   [Node.js and npm](https://nodejs.org/)
+*   [`wasm-pack`](https://rustwasm.github.io/wasm-pack/installer/)
+*   [DVC](https://dvc.org/doc/install)
+
+### Steps
+
+1.  **Clone the repository:**
+    ```bash
+    git clone https://github.com/0xReLogic/Siren.git
+    cd Siren
+    ```
+
+2.  **Pull DVC-tracked files (the model):**
+    ```bash
+    dvc pull
+    ```
+
+3.  **Build the WebAssembly module:**
+    Navigate to the Rust engine directory and build it.
+    ```bash
+    cd extension/siren_engine
+    wasm-pack build --target browser --out-dir pkg
+    ```
+
+4.  **Build the extension frontend:**
+    Navigate to the Vite app directory, install dependencies, and build.
+    ```bash
+    cd ../app
+    npm install
+    npm run build
+    ```
+
+5.  **Load the extension in your browser:**
+    *   Open Chrome/Edge and navigate to `chrome://extensions`.
+    *   Enable **Developer mode**.
+    *   Click **"Load unpacked"**.
+    *   Select the `extension/app/dist` directory.
 
 ## Next Steps
 
-1.  **Begin Phase 3: Browser Extension**: Build the foundational framework for the browser extension using Rust.
-2.  **Model Integration**: Integrate the `model_quantized.onnx` model into the extension to perform local inference within the user's browser.
-
----
-*This documentation will be updated as the project progresses.*
+-   **Debug WASM Loading**: Isolate and fix the silent failure preventing the WASM module from executing in the popup.
+-   **Refine UI/UX**: Improve the user interface and provide more detailed feedback.
+-   **Expand Threat Intelligence**: Integrate additional data sources or heuristics to improve detection accuracy.
