@@ -1,0 +1,82 @@
+Project: SIREN
+Julukan: Real-time Phishing Detector
+Core: Browser extension + backend yang pakai transformer model untuk klasifikasi halaman phishing dalam <100 ms.
+Stack: Rust (extension + WASM) + Python (model server).
+Skill flex:
+• On-device inference (ONNX Runtime).
+• Federated learning untuk update model.
+• Threat-intel feeds (URLhaus, PhishTank).
+
+IREN – Real-time Phishing Detector
+Master TODO (end-to-end, MVP → scale)
+PHASE 0 – Plan & Repo Bootstrap (Day 0-2)
+[ ] Create mono-repo github.com/<you>/siren
+├─ extension (Rust + WASM)
+├─ model (Python training)
+├─ server (Go inference API)
+└─ infra (Docker, Helm)
+[ ] MIT license, CODE_OF_CONDUCT.md, issue/PR templates
+[ ] CI matrix:
+• Rust stable + WASM target
+• Go 1.22
+• Python 3.11 (torch, onnx, transformers)
+[ ] justfile quick tasks: just dev, just build-ext, just train
+PHASE 1 – Threat Model & Data Strategy (Day 2-5)
+[ ] RFC-001: Threat model (phishing vs. legit edge-cases, evasion)
+[ ] RFC-002: Dataset selection & scraping policy
+• Sources: OpenPhish, PhishTank, URLhaus, Common Crawl (legit)
+• Ethics & rate-limiting checklist
+[ ] Data pipeline design:
+• raw → dedup → label → hold-out split (80/10/10)
+• store in S3 / minio with versioning (DVC)
+PHASE 2 – Model Training & Optimization (Day 5-12)
+[ ] Baseline: DistilBERT fine-tune (HF transformers)
+[ ] Feature ablation: HTML only vs HTML+URL vs +screenshot
+[ ] Quantization: torch.quantization → INT8, then export ONNX
+[ ] Distil again to 6-layer mini-BERT; target <5 MB .onnx
+[ ] Benchmark:
+• Accuracy ≥ 97 % phishing F1 (public test set)
+• Inference < 20 ms on CPU (Intel i7)
+[ ] Push model artifacts to GitHub Releases & signed checksums
+PHASE 3 – Browser Extension Core (Rust + WASM) (Day 12-20)
+[ ] extension/ scaffold (manifest v3)
+[ ] Content-script: capture DOM + URL on navigation
+[ ] WASM module (wasm-pack) → ONNX Runtime Web
+[ ] Async classification pipeline (web-worker)
+[ ] UI:
+• Popup risk score (green / amber / red)
+• One-click report false-positive
+[ ] Privacy: zero telemetry by default; opt-in only
+[ ] Unit tests (wasm-pack test --chrome --firefox)
+PHASE 4 – Go Inference Micro-Service (Day 20-25)
+[ ] server/ REST + gRPC
+• POST /classify – JSON {url, html}
+[ ] Horizontal scale: stateless pods, HPA on CPU 60 %
+[ ] Auth: signed JWT (extension embeds public key)
+[ ] Rate-limit (per-IP & per-extension-id)
+[ ] Dockerfile + distroless image (<30 MB)
+[ ] Load test: k6 1 k RPS p99 < 50 ms
+PHASE 5 – Federated Learning Skeleton (Day 25-30)
+[ ] Privacy budget definition (ε = 1.0)
+[ ] fl-rs client in extension (weight delta + DP noise)
+[ ] Server aggregation (FedAvg) nightly cron
+[ ] Canary rollout: 1 % of users
+PHASE 6 – Release & Distribution (Day 30-35)
+[ ] Chrome Web Store submission assets (128×128 icon, promo)
+[ ] Firefox Add-on (AMO) listing
+[ ] Signed XPI & CRX via GitHub Actions
+[ ] Auto-update endpoint (update_url in manifest)
+[ ] Landing page (Next.js + Tailwind) with install buttons
+PHASE 7 – Observability & Abuse Mitigation (Day 35-40)
+[ ] Extension telemetry (opt-in):
+• chrome.runtime.onMessage → Prometheus push-gateway
+[ ] Server metrics: siren_requests_total, siren_latency_ms
+[ ] Grafana dashboard + alertmanager
+[ ] Phishing campaign replay test (Evilginx) weekly
+[ ] Bug-bounty program outline (HackerOne draft)
+PHASE 8 – Advanced Stretch (post-MVP)
+[ ] Screenshot → CNN (Vision Transformer tiny)
+[ ] i18n: 10 languages (Crowdin)
+[ ] Enterprise mode: policy JSON via MDM
+[ ] On-device training (WebGPU)
+[ ] SOC 2 Type II readiness checklist

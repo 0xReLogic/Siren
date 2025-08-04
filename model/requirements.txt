@@ -1,0 +1,12 @@
+# Core ML Libraries
+transformers
+torch
+onnx
+
+# Data Handling & Scraping
+requests
+beautifulsoup4
+dvc[s3]
+
+# Utilities
+flake8

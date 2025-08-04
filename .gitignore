@@ -1,0 +1,11 @@
+# Python virtual environment
+venv/
+env/
+
+# Python cache
+__pycache__/
+*.pyc
+
+# DVC tracked files - These will be managed by DVC
+/model/siren_baseline_model/
+/model/siren_baseline_model.zip
