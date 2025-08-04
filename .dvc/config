@@ -1,0 +1,7 @@
+[core]
+    remote = origin
+['remote "origin"']
+    url = s3://Siren
+    endpointurl = https://dagshub.com/api/v1/repo-buckets/s3/0xReLogic
+    access_key_id = YOUR_NEW_TOKEN
+    secret_access_key = YOUR_NEW_TOKEN
