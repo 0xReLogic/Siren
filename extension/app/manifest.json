@@ -1,0 +1,15 @@
+{
+  "manifest_version": 3,
+  "name": "Siren Phishing Detector",
+  "version": "0.1.0",
+  "description": "A real-time phishing detector using Rust and WebAssembly.",
+  "action": {
+    "default_popup": "popup.html"
+  },
+  "permissions": [
+    "activeTab"
+  ],
+  "content_security_policy": {
+    "extension_pages": "script-src 'self' 'wasm-unsafe-eval'; object-src 'self';"
+  }
+}

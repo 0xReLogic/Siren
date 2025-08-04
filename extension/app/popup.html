@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Siren</title>
+    <style>
+      body {
+        font-family: sans-serif;
+        width: 300px;
+        padding: 15px;
+        text-align: center;
+      }
+      input[type="url"] {
+        width: 95%;
+        padding: 8px;
+        margin-bottom: 10px;
+      }
+      button {
+        width: 100%;
+        padding: 10px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        cursor: pointer;
+      }
+      #result {
+        margin-top: 15px;
+        font-weight: bold;
+      }
+      .phishing { color: #dc3545; }
+      .safe { color: #28a745; }
+    </style>
+  </head>
+  <body>
+    <h1>Siren Phishing Detector</h1>
+    <input type="url" id="url-input" placeholder="Enter URL to check" />
+    <button id="check-button">Check</button>
+    <div id="result"></div>
+    <script type="module" src="./popup.js"></script>
+  </body>
+</html>

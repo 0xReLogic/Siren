@@ -1,11 +1,33 @@
-# Python virtual environment
+# General & OS
+.DS_Store
+Thumbs.db
+*.log
+.vscode/
+.idea/
+
+# Python
 venv/
 env/
-
-# Python cache
 __pycache__/
 *.pyc
 
-# DVC tracked files - These will be managed by DVC
-/model/siren_baseline_model/
+# Rust
+# Ignore the entire build directory
+**/target/
+# Ignore the wasm-pack output directory
+/extension/siren_engine/pkg/
+
+# Node.js
+# Ignore dependencies and build output from the extension app
+/extension/app/node_modules/
+/extension/app/dist/
+
+# DVC
+# The cache and temporary files should be ignored
+.dvc/cache
+.dvc/tmp
+
+# The following are placeholders for DVC-tracked files, which are themselves
+# pointers and should be in git. The actual data is in the .dvc/cache.
 /model/siren_baseline_model.zip
+/model/model_quantized.onnx
